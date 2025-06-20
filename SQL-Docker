@@ -1,0 +1,45 @@
+1. Create docker image
+    docker build -t <db_name> .
+2. run the image   
+    docker run --name runner --rm -e POSTGRES_PASSWORD=password -d <db_name> 
+3. get container id
+    docker ps  -> running containers
+    docker ps -a -> stopped containers
+4. Exec (ssh) into the container
+    docker exec -it <CONTAINER_ID> bash
+5. go into prosgres
+    su - postgres
+6. From within the container, access the postgres repl
+    P
+7. create db
+    createdb <db_name>
+8. go into db
+    psql <database_name>
+-------------------------------
+Good to know docker commands
+1. Remove all docker images
+    docker rmi -f $(docker images -a -q)
+2. Romove all containers
+    docker rm -f $(docker ps -aq)
+--------------------------------
+Push to docker hub
+1. Push to docker hub
+    docker tag store_image:latest <nlodato6/assessment3:v2> / <docker_user_name/repo_name:tag>
+    docker push nlodato6/assessment3:v2    
+ 
+2. Pull from docker hub
+    docker pull nlodato6/assessment3:v2   
+3. check if image pulled
+    docker images
+4. run container
+    docker run --name <container_name> -e POSTGRES_PASSWORD=password -d nlodato6/assessment3:v2 -> <image_name>
+5. exec into container
+    docker exec -it <image_name> bash  
+    psql -h localhost -p 5432 -U postgres -d store_db
+9. to get the internal IP address of the container
+    docker inspect <CONTAINER_ID> | grep IPAddress
+clean() {
+  docker stop $(docker ps -a -q) #stops all containers
+  docker rm $(docker ps -a -q)  #removes all containers
+  docker rmi $(docker images -a -q) #removes all images
+}
